@@ -149,14 +149,14 @@ class DateTimeTools(object):
             from .conversionDialog import ConversionDialog
             self.conversionDialog = ConversionDialog(self.iface, self.iface.mainWindow())
             self.conversionDialog.setFloating(True)
-            self.iface.addDockWidget(Qt.RightDockWidgetArea, self.conversionDialog)
+            self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.conversionDialog)
         self.conversionDialog.show()
 
     def startTZCapture(self):
         if self.copyModeSettings is None:
             from .copyModeSettings import CopyModeSettings
             self.copyModeSettings = CopyModeSettings(self.iface, self.iface.mainWindow())
-            self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.copyModeSettings)
+            self.iface.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.copyModeSettings)
         if self.captureTzTool is None:
             from .copyTimezoneTool import CopyTimeZoneTool
             self.captureTzTool = CopyTimeZoneTool(self.copyModeSettings, self.iface)

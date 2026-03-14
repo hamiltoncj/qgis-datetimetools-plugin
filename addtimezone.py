@@ -46,7 +46,7 @@ class AddTimezoneAlgorithm(QgsProcessingAlgorithm):
             QgsProcessingParameterFeatureSource(
                 self.PrmInputLayer,
                 'Input point layer',
-                [QgsProcessing.TypeVectorPoint])
+                [QgsProcessing.SourceType.TypeVectorPoint])
         )
         self.addParameter(
             QgsProcessingParameterBoolean(
@@ -59,7 +59,7 @@ class AddTimezoneAlgorithm(QgsProcessingAlgorithm):
             QgsProcessingParameterDateTime(
                 self.PrmDate,
                 'Select date for time zone offset calculation',
-                type=QgsProcessingParameterDateTime.Date,
+                type=QgsProcessingParameterDateTime.Type.Date,
                 optional=True,
                 )
         )
@@ -142,7 +142,7 @@ class AddTimezoneAlgorithm(QgsProcessingAlgorithm):
         file = os.path.dirname(__file__) + '/index.html'
         if not os.path.exists(file):
             return ''
-        return QUrl.fromLocalFile(file).toString(QUrl.FullyEncoded)
+        return QUrl.fromLocalFile(file).toString(QUrl.ComponentFormattingOption.FullyEncoded)
 
     def createInstance(self):
         return AddTimezoneAlgorithm()

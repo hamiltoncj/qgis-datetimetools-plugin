@@ -37,11 +37,11 @@ class CopyTimeZoneTool(QgsMapToolEmitPoint):
         self.rubber = QgsRubberBand(self.canvas)
         self.rubber.setColor(QColor(255, 70, 0, 200))
         self.rubber.setWidth(3)
-        self.rubber.setBrushStyle(Qt.NoBrush)
+        self.rubber.setBrushStyle(Qt.BrushStyle.NoBrush)
 
     def activate(self):
         '''When activated set the cursor to a crosshair.'''
-        self.canvas.setCursor(Qt.CrossCursor)
+        self.canvas.setCursor(Qt.CursorShape.CrossCursor)
         self.tzf = tzf_instance.getTZF()
         self.settings.show()
 
@@ -111,7 +111,7 @@ class CopyTimeZoneTool(QgsMapToolEmitPoint):
         if msg:
             clipboard = QApplication.clipboard()
             clipboard.setText(msg)
-            self.iface.messageBar().pushMessage("", "'{}' copied to the clipboard".format(msg), level=Qgis.Info, duration=2)
+            self.iface.messageBar().pushMessage("", "'{}' copied to the clipboard".format(msg), level=Qgis.MessageLevel.Info, duration=2)
 
 def tzf_to_qgis_polygon(tzdata):
     if not tzdata or len(tzdata) < 1:

@@ -62,7 +62,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         self.rubber = QgsRubberBand(self.canvas)
         self.rubber.setColor(QColor(255, 70, 0, 200))
         self.rubber.setWidth(3)
-        self.rubber.setBrushStyle(Qt.NoBrush)
+        self.rubber.setBrushStyle(Qt.BrushStyle.NoBrush)
         
         self.tf = tzf_instance.getTZF()
         self.timeEdit.setDisplayFormat("HH:mm:ss")
@@ -78,7 +78,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         self.captureCoordinate.captureStopped.connect(self.stopCapture)
         self.coordCaptureButton.clicked.connect(self.startCapture)
 
-        self.timezoneComboBox.view().setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.timezoneComboBox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.timezoneComboBox.addItems(sorted(available_timezones()))
         self.timezoneComboBox.currentIndexChanged.connect(self.timezone_changed)
         
@@ -132,7 +132,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         name = dt.tzname()
         if name in win_tz_map:
             name = win_tz_map[name]
-        id = self.timezoneComboBox.findText(name,Qt.MatchExactly)
+        id = self.timezoneComboBox.findText(name,Qt.MatchFlag.MatchExactly)
         if id == -1:
             offset = int(dt.utcoffset().total_seconds()/3600.0)
             name = 'Etc/GMT{:+d}'.format(-offset)
@@ -220,7 +220,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         if id != Update.TIME_ZONE:
             # This should always be true because we have forced the timezone to adhear to the list
             name = str(dt.tzinfo)
-            id = self.timezoneComboBox.findText(name,Qt.MatchExactly)
+            id = self.timezoneComboBox.findText(name,Qt.MatchFlag.MatchExactly)
             self.timezoneComboBox.blockSignals(True)
             self.timezoneComboBox.setCurrentIndex(id)
             self.timezoneComboBox.blockSignals(False)
@@ -359,7 +359,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
             self.setCoordinateTimezone(lat, lon)
             self.updateDateTime()
         except Exception:
-            self.iface.messageBar().pushMessage("", "Invalid 'latitude, longitude'", level=Qgis.Warning, duration=2)
+            self.iface.messageBar().pushMessage("", "Invalid 'latitude, longitude'", level=Qgis.MessageLevel.Warning, duration=2)
             return
 
     def on_epochCommitButton_pressed(self):
@@ -386,7 +386,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
             julian = float(self.julienLineEdit.text().strip()) - MJD_0
             date = jd2gcal(MJD_0, julian)
         except Exception:
-            self.iface.messageBar().pushMessage("", "Invalid julian date", level=Qgis.Warning, duration=2)
+            self.iface.messageBar().pushMessage("", "Invalid julian date", level=Qgis.MessageLevel.Warning, duration=2)
             return
         olddt = self.getLocalDateTime()
         dt = datetime(date[0], date[1], date[2], olddt.hour, olddt.minute, olddt.second, olddt.microsecond)
@@ -400,7 +400,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         try:
             dt = dateutil.parser.parse(str, default=datetime(MINYEAR, 1, 1, hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC')))
         except Exception:
-            self.iface.messageBar().pushMessage("", "Invalid ISO8601 date and time", level=Qgis.Warning, duration=2)
+            self.iface.messageBar().pushMessage("", "Invalid ISO8601 date and time", level=Qgis.MessageLevel.Warning, duration=2)
             return
         self.dt_utc = dt.astimezone(ZoneInfo('UTC'))
         self.updateDateTime(Update.UTC)
@@ -415,7 +415,7 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
         try:
             dt_delta = dateutil.parser.parse(str, default=datetime(MINYEAR, 1, 1, hour=0, minute=0, second=0, microsecond=0, tzinfo=ZoneInfo('UTC')))
         except Exception:
-            self.iface.messageBar().pushMessage("", "Invalid ISO8601 date and time", level=Qgis.Warning, duration=2)
+            self.iface.messageBar().pushMessage("", "Invalid ISO8601 date and time", level=Qgis.MessageLevel.Warning, duration=2)
             return
         diff = relativedelta(dt_delta, self.dt_utc)
         msg = '{}y {}m {}d {}h {}m {}s {}uS'.format(diff.years, diff.months, diff.days, diff.hours, diff.minutes, diff.seconds, diff.microseconds)
@@ -424,57 +424,57 @@ class ConversionDialog(QDockWidget, FORM_CLASS):
     def on_timezoneCopyButton_pressed(self):
         s = str(self.timezoneComboBox.currentText())
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_coordCopyButton_pressed(self):
         s = self.coordLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_epochCopyButton_pressed(self):
         s = self.epochLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_epochmsCopyButton_pressed(self):
         s = self.epochmsLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_julianCopyButton_pressed(self):
         s = self.julienLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_iso8601CopyButton_pressed(self):
         s = self.iso8601LineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
 
     def on_iso8601_2_CopyButton_pressed(self):
         s = self.iso8601_2_LineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
 
     def on_dateDifferenceCopyButton_pressed(self):
         s = self.dtDeltaLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_sunCopyButton_pressed(self):
         s = self.sunTextEdit.toPlainText().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "Sun information copied to the clipboard", level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "Sun information copied to the clipboard", level=Qgis.MessageLevel.Info, duration=3)
         
     def on_sunAzimuthCopyButton_pressed(self):
         s = self.sunAzimuthLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
         
     def on_sunElevationCopyButton_pressed(self):
         s = self.sunElevationLineEdit.text().strip()
         self.clipboard.setText(s)
-        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.Info, duration=3)
+        self.iface.messageBar().pushMessage("", "{} copied to the clipboard".format(s), level=Qgis.MessageLevel.Info, duration=3)
 
 def tzf_to_qgis_polygon(tzdata):
     if not tzdata or len(tzdata) < 1:

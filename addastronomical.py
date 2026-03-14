@@ -48,7 +48,7 @@ class AddAstronomicalAlgorithm(QgsProcessingAlgorithm):
             QgsProcessingParameterFeatureSource(
                 self.PrmInputLayer,
                 'Input point layer',
-                [QgsProcessing.TypeVectorPoint])
+                [QgsProcessing.SourceType.TypeVectorPoint])
         )
         self.addParameter(
             QgsProcessingParameterBoolean(
@@ -68,7 +68,7 @@ class AddAstronomicalAlgorithm(QgsProcessingAlgorithm):
             QgsProcessingParameterDateTime(
                 self.PrmDate,
                 'Select date for solar calculations',
-                type=QgsProcessingParameterDateTime.Date,
+                type=QgsProcessingParameterDateTime.Type.Date,
                 optional=False,
                 )
         )
@@ -168,7 +168,7 @@ class AddAstronomicalAlgorithm(QgsProcessingAlgorithm):
         file = os.path.dirname(__file__) + '/index.html'
         if not os.path.exists(file):
             return ''
-        return QUrl.fromLocalFile(file).toString(QUrl.FullyEncoded)
+        return QUrl.fromLocalFile(file).toString(QUrl.ComponentFormattingOption.FullyEncoded)
 
     def createInstance(self):
         return AddAstronomicalAlgorithm()
